@@ -289,12 +289,12 @@ static void eventLoop (typeThread* thread) {
 
     Handle<Object> fs_obj = NanNew<Object>();
     JSObjFn(fs_obj, "readFileSync", readFileSync_);
-    global->Set(NanNew<String>("native_fs_"), fs_obj, attribute_ro_dd);
+    global->Set(NanNew<String>("native_fs_"), fs_obj); //, attribute_ro_dd);
 
     Handle<Object> console_obj = NanNew<Object>();
     JSObjFn(console_obj, "log", console_log);
     JSObjFn(console_obj, "error", console_error);
-    global->Set(NanNew<String>("console"), console_obj, attribute_ro_dd);
+    global->Set(NanNew<String>("console"), console_obj); //, attribute_ro_dd);
 
     global->Set(NanNew<String>("self"), global);
     global->Set(NanNew<String>("global"), global);
@@ -342,7 +342,7 @@ static void eventLoop (typeThread* thread) {
 
           if ((++ctr) > 2e3) {
             ctr= 0;
-            V8::IdleNotification();
+            //V8::IdleNotification();
           }
 
           if (job->jobType == kJobTypeEval) {
@@ -427,7 +427,7 @@ static void eventLoop (typeThread* thread) {
 
           if ((++ctr) > 2e3) {
             ctr= 0;
-            V8::IdleNotification();
+            //V8::IdleNotification();
           }
 
           resultado= dispatchNextTicks->CallAsFunction(global, 0, NULL);
@@ -897,7 +897,7 @@ NAN_METHOD(Create) {
     thread->id= threadsCtr++;
 
     Local<Object> local_JSObject = NanNew(threadTemplate)->NewInstance();
-    local_JSObject->Set(NanNew(id_symbol), NanNew<Integer>(thread->id));
+    local_JSObject->Set(NanNew(id_symbol), NanNew<Integer>((uint32_t)thread->id));
 	NanSetInternalFieldPointer(local_JSObject, 0, thread);
 	NanAssignPersistent(thread->JSObject, local_JSObject);
 	
